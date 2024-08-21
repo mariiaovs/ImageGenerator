@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Image Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      input,
+      button {
+        margin-top: 10px;
+      }
+      img {
+        margin-top: 20px;
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>AI Image Generator</h1>
+    <form id="imageForm">
+      <label for="prompt">Enter your prompt:</label>
+      <input type="text" id="prompt" name="prompt" required />
+      <button type="submit">Generate Image</button>
+    </form>
+    <img id="resultImage" src="" alt="Generated Image" style="display: none" />
+
+    <script>
+      document
+        .getElementById("imageForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          fetch("/generate", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.blob())
+            .then((blob) => {
+              const url = URL.createObjectURL(blob);
+              console.log(url);
+              const img = document.getElementById("resultImage");
+              img.src = url;
+              img.style.display = "block";
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
+</html>
